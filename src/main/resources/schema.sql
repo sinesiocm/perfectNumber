@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS audit_logs(
+    `id` int(10) NOT NULL AUTO_INCREMENT,
+    `log` varchar(500) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

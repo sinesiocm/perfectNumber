@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: Fefeta2011!09  # Senha do usuário root
+      MYSQL_DATABASE: teste         # Nome do banco de dados
+      MYSQL_USER: teste             # Usuário do banco
+      MYSQL_PASSWORD: Fefeta2011!09     # Senha do usuário
+    ports:
+      - "3306:3306"  # Mapeamento de portas
+    networks:
+      - app-network
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - mysql-data:/var/lib/mysql
+      
+  springboot-app:
+    image: sinesiocm/springboot-app # Nome da imagem do Spring Boot
+    container_name: sinesiocm
+    build:
+      context: .  # Caminho onde o Dockerfile está localizado (se for usar build)
+    ports:
+      - "8080:8080"  # Porta que o Spring Boot vai expor
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/teste  # URL de conexão com o MySQL
+      SPRING_DATASOURCE_USERNAME: teste  # Usuário do banco
+      SPRING_DATASOURCE_PASSWORD: Fefeta2011!09  # Senha do banco
+    depends_on:
+      - mysql  # Garante que o MySQL seja iniciado antes do Spring Boot
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
